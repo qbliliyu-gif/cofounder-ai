@@ -1,0 +1,1380 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoFounder AI - Founder Intelligence Platform</title>
+  <meta name="description" content="AI predicts founder conflict, equity disputes, execution mismatch, startup survival probability, and long-term partnership outcomes.">
+  <style>
+    :root {
+      --bg: #f7f8f5;
+      --ink: #111827;
+      --muted: #64748b;
+      --line: #dbe3df;
+      --panel: #ffffff;
+      --panel-soft: #eef5f2;
+      --green: #0f766e;
+      --green-dark: #0b4f49;
+      --coral: #e35d4f;
+      --amber: #d99a20;
+      --blue: #2563eb;
+      --shadow: 0 18px 50px rgba(15, 23, 42, .12);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.5;
+    }
+
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    .app-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px clamp(16px, 4vw, 56px);
+      border-bottom: 1px solid rgba(219, 227, 223, .8);
+      background: rgba(247, 248, 245, .88);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: max-content;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: linear-gradient(135deg, var(--green), #172554);
+      box-shadow: 0 8px 20px rgba(15, 118, 110, .28);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar { display: none; }
+
+    .nav-link {
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #334155;
+      padding: 9px 12px;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: #e7efec;
+      color: var(--green-dark);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: max-content;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 9px 14px;
+      color: white;
+      background: var(--green);
+      box-shadow: 0 8px 20px rgba(15, 118, 110, .22);
+      transition: transform .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: var(--green-dark);
+      box-shadow: 0 12px 28px rgba(15, 118, 110, .26);
+    }
+
+    .btn.secondary {
+      color: var(--ink);
+      background: white;
+      border-color: var(--line);
+      box-shadow: none;
+    }
+
+    .btn.secondary:hover { background: #f1f5f3; }
+    .btn.danger { background: var(--coral); }
+    .btn.dark { background: #111827; }
+    .btn.full { width: 100%; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .hero {
+      min-height: calc(100vh - 65px);
+      display: grid;
+      align-items: center;
+      position: relative;
+      isolation: isolate;
+      color: #f8fafc;
+      background:
+        linear-gradient(rgba(148, 163, 184, .08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, .08) 1px, transparent 1px),
+        radial-gradient(circle at 78% 20%, rgba(15, 118, 110, .28), transparent 28%),
+        #070b12;
+      background-size: 42px 42px, 42px 42px, auto, auto;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, transparent, rgba(7, 11, 18, .92));
+      z-index: -1;
+    }
+
+    .hero-inner {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 54px 0 28px;
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(420px, 1.05fr);
+      gap: 34px;
+      align-items: center;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      padding-bottom: 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(148, 163, 184, .32);
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: rgba(15, 23, 42, .72);
+      color: rgba(226, 232, 240, .92);
+      font-size: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 880px;
+      font-size: clamp(42px, 6vw, 82px);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: 20px 0 28px;
+      color: rgba(226, 232, 240, .82);
+      font-size: clamp(17px, 2vw, 21px);
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .hero-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      grid-column: 1 / -1;
+      border: 1px solid rgba(148, 163, 184, .24);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(15, 23, 42, .88);
+      backdrop-filter: blur(18px);
+    }
+
+    .metric {
+      min-height: 92px;
+      padding: 16px;
+      background: rgba(2, 6, 23, .58);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .metric span { color: rgba(255, 255, 255, .72); font-size: 13px; }
+
+    .terminal {
+      border: 1px solid rgba(148, 163, 184, .28);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(2, 6, 23, .88);
+      box-shadow: 0 26px 80px rgba(0, 0, 0, .38);
+    }
+
+    .terminal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px 14px;
+      border-bottom: 1px solid rgba(148, 163, 184, .18);
+      color: #94a3b8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .terminal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: rgba(148, 163, 184, .16);
+    }
+
+    .terminal-cell {
+      min-height: 142px;
+      padding: 16px;
+      background: rgba(15, 23, 42, .96);
+    }
+
+    .terminal-cell small {
+      display: block;
+      color: #94a3b8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      text-transform: uppercase;
+    }
+
+    .terminal-value {
+      margin: 8px 0 4px;
+      color: #f8fafc;
+      font-size: 34px;
+      font-weight: 850;
+      line-height: 1;
+    }
+
+    .terminal-risk { color: #fb7185; }
+    .terminal-safe { color: #2dd4bf; }
+    .terminal-warn { color: #fbbf24; }
+
+    .spark {
+      height: 34px;
+      margin-top: 16px;
+      background:
+        linear-gradient(90deg, transparent 0 6%, rgba(45, 212, 191, .9) 6% 8%, transparent 8% 17%, rgba(45, 212, 191, .45) 17% 20%, transparent 20% 32%, rgba(251, 191, 36, .75) 32% 35%, transparent 35% 48%, rgba(45, 212, 191, .8) 48% 52%, transparent 52% 68%, rgba(251, 113, 133, .85) 68% 71%, transparent 71% 100%),
+        linear-gradient(180deg, transparent 48%, rgba(148, 163, 184, .24) 49% 51%, transparent 52%);
+    }
+
+    .engine-card {
+      min-height: 220px;
+      background: #0b111c;
+      color: #e2e8f0;
+      border-color: #1e293b;
+    }
+
+    .engine-card .subtle { color: #94a3b8; }
+
+    .section-band {
+      padding: 56px 0;
+      background: #090d16;
+      color: #f8fafc;
+      border-top: 1px solid #1e293b;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .section-band .page { padding: 0; }
+    .section-band .subtle { color: #94a3b8; }
+
+    .predictor-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, .8fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .predictor-panel {
+      border: 1px solid #263244;
+      border-radius: 8px;
+      padding: 18px;
+      background: #0f172a;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .matrix {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .matrix-row {
+      display: grid;
+      grid-template-columns: 190px 1fr 64px;
+      gap: 12px;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .matrix-track {
+      height: 10px;
+      border-radius: 999px;
+      background: #1e293b;
+      overflow: hidden;
+    }
+
+    .matrix-track i {
+      display: block;
+      width: var(--w);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--c);
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 70px;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .page-title { max-width: 720px; }
+    h2 { margin: 0; font-size: clamp(28px, 4vw, 44px); line-height: 1.05; letter-spacing: 0; }
+    h3 { margin: 0 0 10px; font-size: 20px; letter-spacing: 0; }
+    .subtle { color: var(--muted); margin: 8px 0 0; }
+
+    .grid { display: grid; gap: 16px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: var(--panel);
+      box-shadow: 0 1px 0 rgba(15, 23, 42, .03);
+    }
+
+    .soft-card {
+      border: 1px solid #cfe0db;
+      border-radius: var(--radius);
+      padding: 18px;
+      background: var(--panel-soft);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: #334155;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px 12px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+    }
+
+    textarea { min-height: 108px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(15, 118, 110, .12); }
+
+    .span-2 { grid-column: span 2; }
+
+    .badge-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #cbd5e1;
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .score-ring {
+      width: 72px;
+      height: 72px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--green-dark);
+      background: conic-gradient(var(--green) calc(var(--score) * 1%), #e2e8f0 0);
+      position: relative;
+      font-weight: 800;
+    }
+
+    .score-ring::before {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: 50%;
+      background: white;
+    }
+
+    .score-ring span { position: relative; z-index: 1; }
+
+    .match-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .avatar {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: linear-gradient(135deg, #0f766e, #2563eb);
+      font-weight: 850;
+      font-size: 20px;
+    }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+    .report-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .report-score {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .big-score {
+      width: 116px;
+      height: 116px;
+      font-size: 30px;
+    }
+
+    .bars { display: grid; gap: 10px; }
+    .bar-row { display: grid; grid-template-columns: 160px 1fr 40px; gap: 10px; align-items: center; font-size: 14px; }
+    .bar {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e2e8f0;
+    }
+    .bar > i { display: block; height: 100%; width: var(--w); border-radius: inherit; background: var(--green); }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      counter-reset: step;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .timeline li {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .timeline li::before {
+      counter-increment: step;
+      content: counter(step);
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: var(--green);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .pricing-card {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      min-height: 420px;
+    }
+
+    .price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      font-size: 38px;
+      font-weight: 850;
+    }
+
+    .price small { color: var(--muted); font-size: 14px; font-weight: 600; }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .table th, .table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .table th { color: #334155; background: #f1f5f3; }
+    .table tr:last-child td { border-bottom: 0; }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 50;
+      max-width: min(420px, calc(100% - 36px));
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      color: #14532d;
+      background: #f0fdf4;
+      box-shadow: var(--shadow);
+      transform: translateY(120%);
+      opacity: 0;
+      transition: transform .2s ease, opacity .2s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .empty-state {
+      display: grid;
+      min-height: 280px;
+      place-items: center;
+      text-align: center;
+      border: 1px dashed #b6c5c0;
+      border-radius: 8px;
+      background: #f1f5f3;
+      color: var(--muted);
+    }
+
+    .hide { display: none !important; }
+
+    @media (max-width: 900px) {
+      .app-nav { align-items: stretch; flex-wrap: wrap; }
+      .nav-links { width: 100%; order: 3; }
+      .hero-inner, .hero-strip, .grid.three, .grid.four, .grid.two, .report-shell, .predictor-grid, .terminal-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .span-2 { grid-column: auto; }
+      .match-card { grid-template-columns: auto 1fr; }
+      .match-card .score-ring { grid-column: 1 / -1; }
+      .report-score { grid-template-columns: 1fr; }
+      .bar-row, .matrix-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .nav-actions { width: 100%; }
+      .nav-actions .btn { flex: 1; }
+      h1 { font-size: 44px; }
+      .hero { min-height: 760px; }
+      .page-head { align-items: flex-start; flex-direction: column; }
+      .hero-actions .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="app-nav">
+    <a class="brand" href="#landing" data-route="landing" aria-label="CoFounder AI 首页">
+      <span class="brand-mark">C</span>
+      <span>CoFounder AI</span>
+    </a>
+    <div class="nav-links" aria-label="主要导航">
+      <button class="nav-link active" data-route="landing">首页</button>
+      <button class="nav-link" data-route="onboarding">Founder DNA</button>
+      <button class="nav-link" data-route="matches">Risk Feed</button>
+      <button class="nav-link" data-route="report">AI Report</button>
+      <button class="nav-link" data-route="simulation">Simulation</button>
+      <button class="nav-link" data-route="pricing">Pricing</button>
+      <button class="nav-link" data-route="admin">Admin</button>
+    </div>
+    <div class="nav-actions">
+      <button class="btn secondary" data-route="auth">登录</button>
+      <button class="btn" data-route="onboarding">运行风险扫描</button>
+    </div>
+  </nav>
+
+  <main>
+    <section id="landing" class="section active">
+      <div class="hero">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <span class="eyebrow">Founder Intelligence Platform</span>
+            <h1>Find the co-founder you won't regret in 3 years.</h1>
+            <p>AI predicts founder conflicts, equity disputes, execution mismatch, startup survival probability, and long-term partnership outcomes before you build together.</p>
+            <div class="hero-actions">
+              <button class="btn" data-route="onboarding">Run Founder Risk Scan</button>
+              <button class="btn secondary" data-route="report">View Intelligence Report</button>
+            </div>
+          </div>
+          <div class="terminal" aria-label="Founder intelligence terminal preview">
+            <div class="terminal-head">
+              <span>COFOUNDER_AI / RELATIONSHIP_RISK</span>
+              <span>LIVE MODEL</span>
+            </div>
+            <div class="terminal-grid">
+              <div class="terminal-cell">
+                <small>Survival Probability</small>
+                <div class="terminal-value terminal-safe">72.4%</div>
+                <span class="mono">12-month operating continuity</span>
+                <div class="spark"></div>
+              </div>
+              <div class="terminal-cell">
+                <small>Founder Churn Risk</small>
+                <div class="terminal-value terminal-risk">31.8%</div>
+                <span class="mono">role ambiguity detected</span>
+                <div class="spark"></div>
+              </div>
+              <div class="terminal-cell">
+                <small>Equity Conflict Risk</small>
+                <div class="terminal-value terminal-warn">64.1%</div>
+                <span class="mono">vesting conversation required</span>
+                <div class="spark"></div>
+              </div>
+              <div class="terminal-cell">
+                <small>Execution Alignment</small>
+                <div class="terminal-value terminal-safe">86.0</div>
+                <span class="mono">weekly shipping cadence match</span>
+                <div class="spark"></div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-strip" aria-label="MVP 指标">
+            <div class="metric"><strong>DNA</strong><span>Founder operating profile</span></div>
+            <div class="metric"><strong>RISK</strong><span>Conflict and equity exposure</span></div>
+            <div class="metric"><strong>SIM</strong><span>12-month venture scenarios</span></div>
+            <div class="metric"><strong>VC</strong><span>Cohort intelligence layer</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="page">
+        <div class="grid three">
+          <div class="card engine-card">
+            <span class="mono">01 / IDENTITY</span>
+            <h3>Founder DNA Engine</h3>
+            <p class="subtle">Maps founder operating style, decision tempo, risk appetite, communication defaults, ambition horizon, role boundaries, and unresolved partnership assumptions.</p>
+          </div>
+          <div class="card engine-card">
+            <span class="mono">02 / EXPOSURE</span>
+            <h3>Founder Risk Engine</h3>
+            <p class="subtle">Scores founder churn risk, equity conflict probability, execution mismatch, hidden role overlap, decision deadlock, and communication breakdown vectors.</p>
+          </div>
+          <div class="card engine-card">
+            <span class="mono">03 / FORECAST</span>
+            <h3>Venture Simulation Engine</h3>
+            <p class="subtle">Stress-tests the team across fundraising failure, customer stagnation, product disagreement, equity renegotiation, and one-founder exit scenarios.</p>
+          </div>
+        </div>
+      </div>
+      <div class="section-band">
+        <div class="page">
+          <div class="predictor-grid">
+            <div class="predictor-panel">
+              <span class="mono">FOUNDER DIVORCE PREDICTOR™</span>
+              <h2 style="margin-top:10px;">The most expensive startup failure is the one you mistake for chemistry.</h2>
+              <p class="subtle">CoFounder AI turns founder relationship risk into an operating dashboard before incorporation, before vesting, before the first investor update.</p>
+              <div class="matrix">
+                <div class="matrix-row"><span>Survival Probability</span><div class="matrix-track"><i style="--w:72%;--c:#2dd4bf;"></i></div><strong>72%</strong></div>
+                <div class="matrix-row"><span>Founder Churn Risk</span><div class="matrix-track"><i style="--w:32%;--c:#fb7185;"></i></div><strong>32%</strong></div>
+                <div class="matrix-row"><span>Equity Conflict Risk</span><div class="matrix-track"><i style="--w:64%;--c:#fbbf24;"></i></div><strong>64%</strong></div>
+                <div class="matrix-row"><span>Execution Alignment Score</span><div class="matrix-track"><i style="--w:86%;--c:#2dd4bf;"></i></div><strong>86</strong></div>
+              </div>
+            </div>
+            <div class="predictor-panel">
+              <span class="mono">FOR ACCELERATORS AND INVESTORS</span>
+              <h3>Upload founder cohorts and rank future winners.</h3>
+              <p class="subtle">Identify fragile teams before the batch starts. Compare founder-market fit, execution alignment, decision quality, commitment risk, and partnership durability across an entire cohort.</p>
+              <div class="actions">
+                <button class="btn" data-route="admin">View Cohort Console</button>
+                <button class="btn secondary" data-route="pricing">See Investor Plans</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="page">
+        <div class="grid two">
+          <div class="card">
+            <span class="mono">WIREFRAME</span>
+            <h3>Landing Page Layout</h3>
+            <ol class="timeline">
+              <li>Top nav: brand, Founder DNA, Risk Feed, AI Report, Simulation, Pricing, Admin, primary CTA.</li>
+              <li>Hero: headline on left, founder-risk terminal on right, four intelligence modules below.</li>
+              <li>Engine row: Founder DNA Engine, Founder Risk Engine, Venture Simulation Engine.</li>
+              <li>Founder Divorce Predictor™: risk matrix and operating interpretation.</li>
+              <li>VC section: cohort upload, ranking future winners, investor CTA.</li>
+            </ol>
+          </div>
+          <div class="card">
+            <span class="mono">CONVERSION FLOW</span>
+            <h3>From curiosity to risk scan</h3>
+            <ol class="timeline">
+              <li>Founder lands on regret-prevention promise.</li>
+              <li>Terminal preview makes the product feel analytical, not social.</li>
+              <li>User runs Founder Risk Scan instead of browsing profiles.</li>
+              <li>AI report exposes risk and creates urgency to complete onboarding.</li>
+              <li>Paid plan unlocks deeper simulations and investor/cohort tooling.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="auth" class="section">
+      <div class="page">
+        <div class="page-head">
+          <div class="page-title">
+            <h2>Sign Up / Login</h2>
+            <p class="subtle">MVP 演示版使用本地状态模拟登录，正式版可接 Clerk 或 Supabase Auth。</p>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="card">
+            <h3>创建账号</h3>
+            <div class="form-grid">
+              <label>姓名<input id="signup-name" value="Richard Founder"></label>
+              <label>邮箱<input id="signup-email" value="demo@cofounder.ai"></label>
+              <label class="span-2">密码<input type="password" value="cofounder123"></label>
+            </div>
+            <div class="actions">
+              <button class="btn" id="signup-btn">注册并进入 Profile</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>登录</h3>
+            <div class="form-grid">
+              <label class="span-2">邮箱<input value="demo@cofounder.ai"></label>
+              <label class="span-2">密码<input type="password" value="cofounder123"></label>
+            </div>
+            <div class="actions">
+              <button class="btn secondary" id="login-btn">登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="onboarding" class="section">
+      <div class="page">
+        <div class="page-head">
+          <div class="page-title">
+            <h2>Founder Onboarding Form</h2>
+            <p class="subtle">高信号 profile 是匹配质量的核心。MVP 先用结构化字段，不做冗长心理测评。</p>
+          </div>
+          <button class="btn" id="save-profile">保存并查看匹配</button>
+        </div>
+        <div class="card">
+          <div class="form-grid">
+            <label>姓名<input id="profile-name" value="Richard Founder"></label>
+            <label>城市 / 时区<input id="profile-city" value="San Francisco / PST"></label>
+            <label>学校<input value="Stanford"></label>
+            <label>当前职业<input value="B2B SaaS Product Lead"></label>
+            <label>LinkedIn<input value="https://linkedin.com/in/founder"></label>
+            <label>GitHub<input value="https://github.com/founder"></label>
+            <label>Twitter / X<input value="https://x.com/founder"></label>
+            <label>角色偏好
+              <select id="profile-role">
+                <option>CEO / GTM Founder</option>
+                <option>CTO / Technical Founder</option>
+                <option>Product Lead</option>
+                <option>COO</option>
+              </select>
+            </label>
+            <label>技能<input id="profile-skills" value="Sales, Product, Fundraising, AI workflow"></label>
+            <label>创业方向<input id="profile-direction" value="AI SaaS, Future of Work"></label>
+            <label>阶段偏好
+              <select>
+                <option>Idea</option>
+                <option>MVP</option>
+                <option>Revenue</option>
+                <option>Funded</option>
+              </select>
+            </label>
+            <label>时间投入
+              <select>
+                <option>Full-time</option>
+                <option>Part-time</option>
+              </select>
+            </label>
+            <label>风险承受能力
+              <select>
+                <option>High - 可以 12 个月无收入</option>
+                <option>Medium - 需要 6 个月内有信号</option>
+                <option>Low - 需要现金流优先</option>
+              </select>
+            </label>
+            <label>股权预期<input value="Pre-incorporation equal split with vesting"></label>
+            <label>工作风格<input value="Weekly shipping, direct feedback, fast customer discovery"></label>
+            <label>决策风格<input value="Data-informed but speed-biased"></label>
+            <label>沟通风格<input value="Async updates + two live calls per week"></label>
+            <label>冲突处理<input value="Direct 1:1, write assumptions, decide owner"></label>
+            <label class="span-2">长期目标<textarea>打造一家 AI 原生 B2B SaaS 公司，优先追求高质量收入和长期复利，而不是短期流量。</textarea></label>
+            <label class="span-2">过往创业 / 项目经历<textarea>做过销售自动化工具，服务过 20+ SMB 客户，熟悉 cold outbound、客户访谈和早期融资材料。</textarea></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="matches" class="section">
+      <div class="page">
+        <div class="page-head">
+          <div class="page-title">
+            <h2>Match Feed</h2>
+            <p class="subtle">用结构化风险信号查看候选 founder，不按简历热度排序，而按合作失败概率、执行节奏和股权风险排序。</p>
+          </div>
+          <button class="btn secondary" id="reset-matches">重置演示数据</button>
+        </div>
+        <div id="match-list" class="grid"></div>
+        <div id="match-empty" class="empty-state hide">
+          <div>
+            <h3>今天的候选人看完了</h3>
+            <p>正式产品会根据你的反馈重新排序推荐队列。</p>
+            <button class="btn" id="empty-reset">重新加载候选人</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="detail" class="section">
+      <div class="page">
+        <div class="page-head">
+          <div class="page-title">
+            <h2 id="detail-title">Match Detail Page</h2>
+            <p class="subtle" id="detail-subtitle">查看候选人的角色、技能、创业方向和匹配理由。</p>
+          </div>
+          <button class="btn secondary" data-route="matches">返回 Match Feed</button>
+        </div>
+        <div id="detail-body"></div>
+      </div>
+    </section>
+
+    <section id="report" class="section">
+      <div class="page">
+        <div class="page-head">
+          <div class="page-title">
+            <h2>AI Compatibility Report</h2>
+            <p class="subtle">模拟 OpenAI 输出的 founder compatibility report，正式版调用 `/report/generate`。</p>
+          </div>
+          <button class="btn" id="generate-report">生成报告</button>
+        </div>
+        <div id="report-content" class="report-shell"></div>
+      </div>
+    </section>
+
+    <section id="simulation" class="section">
+      <div class="page">
+        <div class="page-head">
+          <div class="page-title">
+            <h2>AI Co-founder Simulation</h2>
+            <p class="subtle">选择一个高风险场景，模拟双方一起创业后可能发生什么。</p>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="card">
+            <h3>选择场景</h3>
+            <div class="form-grid">
+              <label class="span-2">Simulation Scenario
+                <select id="scenario">
+                  <option value="一起创业 3 个月">一起创业 3 个月</option>
+                  <option value="一起创业 12 个月">一起创业 12 个月</option>
+                  <option value="融资失败场景">融资失败场景</option>
+                  <option value="产品方向分歧场景">产品方向分歧场景</option>
+                  <option value="股权争议场景">股权争议场景</option>
+                  <option value="客户增长困难场景">客户增长困难场景</option>
+                  <option value="一方想退出场景">一方想退出场景</option>
+                </select>
+              </label>
+            </div>
+            <div class="actions">
+              <button class="btn" id="run-simulation">运行模拟</button>
+            </div>
+          </div>
+          <div id="simulation-output" class="card"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="chat" class="section">
+      <div class="page">
+        <div class="page-head">
+          <div class="page-title">
+            <h2>Chat Intro Page</h2>
+            <p class="subtle">双方互相感兴趣后，AI 自动生成第一条破冰信息和第一次 founder call 议程。</p>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="card">
+            <h3>AI 破冰消息</h3>
+            <p id="opener">Maya，你的 LLM 工程背景和我这边的 GTM/客户发现经验非常互补。我想先用 30 分钟聊一个具体方向：AI workflow for SMB sales teams。如果你愿意，我们可以各自带 3 个最强假设来快速判断是否值得试合作。</p>
+            <div class="actions">
+              <button class="btn secondary" id="copy-opener">复制消息</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>第一次 Founder Call 议程</h3>
+            <ol class="timeline">
+              <li>各自 3 分钟说明为什么现在想创业。</li>
+              <li>确认目标用户、行业方向和不可接受的红线。</li>
+              <li>讨论角色分工、投入时间和股权预期。</li>
+              <li>定义一个 7 天试合作任务和成功标准。</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="section">
+      <div class="page">
+        <div class="page-head">
+          <div class="page-title">
+            <h2>Pricing Page</h2>
+            <p class="subtle">MVP 收费重点：让用户为高质量报告、模拟和优先推荐付费。</p>
+          </div>
+        </div>
+        <div class="grid three">
+          <div class="card pricing-card">
+            <h3>Free</h3>
+            <div class="price">$0<small>/月</small></div>
+            <p class="subtle">适合先体验匹配质量。</p>
+            <div class="badge-row">
+              <span class="badge">每周 5 个 match</span>
+              <span class="badge">基础 AI explain</span>
+              <span class="badge">1 份 demo 报告</span>
+            </div>
+            <button class="btn secondary full" data-route="onboarding">开始</button>
+          </div>
+          <div class="card pricing-card" style="border-color:#0f766e; box-shadow: var(--shadow);">
+            <h3>Founder Pro</h3>
+            <div class="price">$19<small>/月</small></div>
+            <p class="subtle">适合认真找合伙人的 founder。</p>
+            <div class="badge-row">
+              <span class="badge">无限 match feed</span>
+              <span class="badge">10 份 AI report</span>
+              <span class="badge">5 次 simulation</span>
+              <span class="badge">Super Match</span>
+            </div>
+            <button class="btn full checkout" data-plan="Founder Pro">Stripe Checkout</button>
+          </div>
+          <div class="card pricing-card">
+            <h3>Community</h3>
+            <div class="price">$499<small>/月起</small></div>
+            <p class="subtle">适合孵化器、VC 和创业社区。</p>
+            <div class="badge-row">
+              <span class="badge">Cohort matching</span>
+              <span class="badge">Admin dashboard</span>
+              <span class="badge">批量导入</span>
+              <span class="badge">匹配数据分析</span>
+            </div>
+            <button class="btn dark full checkout" data-plan="Community">联系销售</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="admin" class="section">
+      <div class="page">
+        <div class="page-head">
+          <div class="page-title">
+            <h2>Admin Dashboard</h2>
+            <p class="subtle">增长和运营后台：用户、匹配、付费、算法表现、留存和邀请码。</p>
+          </div>
+        </div>
+        <div class="grid four">
+          <div class="soft-card"><h3>1,000</h3><p class="subtle">90 天注册目标</p></div>
+          <div class="soft-card"><h3>300</h3><p class="subtle">完整 Profile 目标</p></div>
+          <div class="soft-card"><h3>100</h3><p class="subtle">Mutual Matches 目标</p></div>
+          <div class="soft-card"><h3>50</h3><p class="subtle">付费用户目标</p></div>
+        </div>
+        <div class="grid two" style="margin-top:16px;">
+          <div class="card">
+            <h3>推荐算法表现</h3>
+            <div class="bars">
+              <div class="bar-row"><span>Like Rate</span><div class="bar"><i style="--w:42%;"></i></div><strong>42%</strong></div>
+              <div class="bar-row"><span>Mutual Rate</span><div class="bar"><i style="--w:18%;"></i></div><strong>18%</strong></div>
+              <div class="bar-row"><span>Report Conversion</span><div class="bar"><i style="--w:31%;"></i></div><strong>31%</strong></div>
+              <div class="bar-row"><span>Paid Conversion</span><div class="bar"><i style="--w:5%;"></i></div><strong>5%</strong></div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>用户管理</h3>
+            <table class="table">
+              <thead><tr><th>用户</th><th>角色</th><th>状态</th><th>计划</th></tr></thead>
+              <tbody>
+                <tr><td>Maya Chen</td><td>CTO</td><td>Active</td><td>Pro</td></tr>
+                <tr><td>Alex Rivera</td><td>Product</td><td>Active</td><td>Free</td></tr>
+                <tr><td>Noah Patel</td><td>Growth</td><td>Review</td><td>Community</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const candidates = [
+      {
+        id: "maya",
+        name: "Maya Chen",
+        initials: "MC",
+        role: "CTO / AI Engineer",
+        city: "New York / EST",
+        stage: "MVP",
+        direction: "AI SaaS, Future of Work",
+        skills: ["Full-stack", "LLM", "Data", "Infra"],
+        values: ["速度", "坦诚", "用户痴迷"],
+        score: 92,
+        status: "new",
+        reasons: ["技能互补：GTM + 技术", "行业一致：AI SaaS", "价值观重合：速度、坦诚", "投入时间一致：Full-time"],
+        risk: "股权比例和最终产品决策权需要提前对齐。",
+        bio: "前机器学习工程师，做过企业知识库和 agent workflow。正在寻找商业合伙人一起验证垂直 SaaS 市场。"
+      },
+      {
+        id: "alex",
+        name: "Alex Rivera",
+        initials: "AR",
+        role: "Product / Design Founder",
+        city: "Remote / PST",
+        stage: "Idea",
+        direction: "Future of Work, Consumer AI",
+        skills: ["UX", "Research", "Prototyping", "Product"],
+        values: ["审美", "用户痴迷", "长期主义"],
+        score: 78,
+        status: "new",
+        reasons: ["产品品味互补", "都处于 idea 阶段", "适合做用户研究和原型冲刺"],
+        risk: "商业/GTM 能力可能重叠不足，技术执行需要第三人补齐。",
+        bio: "前设计负责人，关注 AI 协作和个人知识管理，希望找到可以快速做 MVP 的伙伴。"
+      },
+      {
+        id: "noah",
+        name: "Noah Patel",
+        initials: "NP",
+        role: "Growth / Partnerships",
+        city: "Austin / CST",
+        stage: "Revenue",
+        direction: "Developer Tools, B2B SaaS",
+        skills: ["Growth", "Partnerships", "Analytics", "Community"],
+        values: ["数据驱动", "速度", "Ownership"],
+        score: 74,
+        status: "new",
+        reasons: ["增长经验强", "B2B SaaS 方向接近", "可补充社区增长能力"],
+        risk: "GTM 能力重叠，且当前阶段偏 revenue，与你的 idea/MVP 节奏略有差异。",
+        bio: "连续创业者，擅长早期增长和开发者社区，正在寻找 AI infra 或 devtools 方向切入点。"
+      }
+    ];
+
+    let state = {
+      userName: "Richard Founder",
+      activeCandidateId: "maya",
+      candidates: JSON.parse(JSON.stringify(candidates))
+    };
+
+    const routes = ["landing", "auth", "onboarding", "matches", "detail", "report", "simulation", "chat", "pricing", "admin"];
+    const toast = document.querySelector("#toast");
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 2400);
+    }
+
+    function routeTo(route) {
+      routes.forEach(id => {
+        const node = document.querySelector("#" + id);
+        if (node) node.classList.toggle("active", id === route);
+      });
+      document.querySelectorAll(".nav-link").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.route === route);
+      });
+      window.location.hash = route;
+      if (route === "matches") renderMatches();
+      if (route === "detail") renderDetail();
+      if (route === "report") renderReport(false);
+      if (route === "simulation") renderSimulation();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function activeCandidate() {
+      return state.candidates.find(item => item.id === state.activeCandidateId) || state.candidates[0] || candidates[0];
+    }
+
+    function badgeList(items) {
+      return `<div class="badge-row">${items.map(item => `<span class="badge">${item}</span>`).join("")}</div>`;
+    }
+
+    function renderMatches() {
+      const list = document.querySelector("#match-list");
+      const visible = state.candidates.filter(item => item.status === "new" || item.status === "liked" || item.status === "super");
+      document.querySelector("#match-empty").classList.toggle("hide", visible.length > 0);
+      list.innerHTML = visible.map(item => `
+        <article class="card match-card">
+          <div class="avatar">${item.initials}</div>
+          <div>
+            <h3>${item.name}</h3>
+            <p class="subtle">${item.role} · ${item.city} · ${item.stage}</p>
+            <p>${item.bio}</p>
+            ${badgeList(item.skills)}
+            <div class="soft-card" style="margin-top:14px;">
+              <strong>AI Explain</strong>
+              <p class="subtle">${item.reasons.join("；")}。风险：${item.risk}</p>
+            </div>
+            <div class="actions">
+              <button class="btn danger" data-action="pass" data-id="${item.id}">Swipe Left</button>
+              <button class="btn" data-action="like" data-id="${item.id}">Swipe Right</button>
+              <button class="btn dark" data-action="super" data-id="${item.id}">Super Match</button>
+              <button class="btn secondary" data-action="detail" data-id="${item.id}">查看详情</button>
+            </div>
+          </div>
+          <div class="score-ring" style="--score:${item.score};"><span>${item.score}</span></div>
+        </article>
+      `).join("");
+    }
+
+    function renderDetail() {
+      const item = activeCandidate();
+      document.querySelector("#detail-title").textContent = item.name + " - Match Detail Page";
+      document.querySelector("#detail-subtitle").textContent = `${item.role} · ${item.city} · ${item.direction}`;
+      document.querySelector("#detail-body").innerHTML = `
+        <div class="report-shell">
+          <div class="card">
+            <div class="match-card">
+              <div class="avatar">${item.initials}</div>
+              <div>
+                <h3>${item.name}</h3>
+                <p class="subtle">${item.bio}</p>
+                ${badgeList(item.skills.concat(item.values))}
+              </div>
+              <div class="score-ring" style="--score:${item.score};"><span>${item.score}</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>AI 推荐理由</h3>
+            <ol class="timeline">${item.reasons.map(reason => `<li>${reason}</li>`).join("")}</ol>
+            <div class="soft-card" style="margin-top:14px;">
+              <strong>最大风险</strong>
+              <p class="subtle">${item.risk}</p>
+            </div>
+            <div class="actions">
+              <button class="btn" data-route="report">生成 AI 报告</button>
+              <button class="btn secondary" data-route="chat">生成 Chat Intro</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function scoreBars(item) {
+      const rows = [
+        ["Skill Complementarity", item.score],
+        ["Role Fit", Math.max(70, item.score - 4)],
+        ["Direction Fit", Math.max(66, item.score - 8)],
+        ["Rhythm Fit", Math.max(62, item.score - 12)],
+        ["Equity Fit", Math.max(55, item.score - 18)],
+        ["Conflict Risk Control", Math.max(52, item.score - 24)]
+      ];
+      return `<div class="bars">${rows.map(([label, value]) => `
+        <div class="bar-row"><span>${label}</span><div class="bar"><i style="--w:${value}%;"></i></div><strong>${value}</strong></div>
+      `).join("")}</div>`;
+    }
+
+    function renderReport(generated) {
+      const item = activeCandidate();
+      document.querySelector("#report-content").innerHTML = `
+        <div class="card">
+          <div class="report-score">
+            <div class="score-ring big-score" style="--score:${item.score};"><span>${item.score}</span></div>
+            <div>
+              <h3>${generated ? "报告已生成" : "当前候选人：" + item.name}</h3>
+              <p class="subtle">Overall Match Score 基于技能互补、角色匹配、方向一致、执行节奏、风险偏好、沟通方式、股权预期和冲突风险。</p>
+            </div>
+          </div>
+          <div style="margin-top:20px;">${scoreBars(item)}</div>
+        </div>
+        <div class="card">
+          <h3>Founder Compatibility Report</h3>
+          <p><strong>Best Collaboration Scenario：</strong>${state.userName} 负责客户发现、定价、融资叙事，${item.name} 负责技术架构、MVP 交付和 AI 产品能力。</p>
+          <p><strong>Biggest Conflict Risk：</strong>${item.risk}</p>
+          <p><strong>Suggested Equity Framework：</strong>先讨论 4 年 vesting、1 年 cliff、职责边界和全职时间点，再讨论比例。</p>
+          <p><strong>12-month Survival Probability：</strong>${Math.round(item.score * .78)}%</p>
+          <p><strong>3-year Partnership Success：</strong>${Math.round(item.score * .48)}%</p>
+          <h3 style="margin-top:18px;">First 30 Days Plan</h3>
+          <ol class="timeline">
+            <li>第 1 周：确认目标用户、角色边界、股权讨论原则。</li>
+            <li>第 2 周：完成 10 次客户访谈，写出共同判断。</li>
+            <li>第 3 周：发布极简 MVP 或 clickable prototype。</li>
+            <li>第 4 周：复盘交付节奏、冲突处理和是否继续合作。</li>
+          </ol>
+        </div>
+      `;
+    }
+
+    function renderSimulation() {
+      const item = activeCandidate();
+      const scenario = document.querySelector("#scenario").value;
+      document.querySelector("#simulation-output").innerHTML = `
+        <h3>${scenario}</h3>
+        <p><strong>可能冲突：</strong>${item.risk}</p>
+        <p><strong>谁会主导：</strong>${scenario.includes("产品") ? "双方会争夺产品判断权，需要明确 DRI。" : item.name + " 会主导技术交付，你会主导客户和商业判断。"}</p>
+        <p><strong>冲突爆发点：</strong>如果连续两周没有真实用户信号，双方会对继续做 MVP 还是 pivot 产生分歧。</p>
+        <p><strong>如何提前避免：</strong>每周固定写 decision memo，用客户证据决策，不把争论变成性格问题。</p>
+        <p><strong>是否建议合作：</strong>Yes with caution，建议先做 7 天 trial project。</p>
+      `;
+    }
+
+    document.addEventListener("click", event => {
+      const route = event.target.closest("[data-route]");
+      if (route) routeTo(route.dataset.route);
+
+      const action = event.target.closest("[data-action]");
+      if (!action) return;
+      const item = state.candidates.find(candidate => candidate.id === action.dataset.id);
+      if (!item) return;
+      state.activeCandidateId = item.id;
+      if (action.dataset.action === "detail") routeTo("detail");
+      if (action.dataset.action === "like") {
+        item.status = "liked";
+        showToast(`已对 ${item.name} Swipe Right。若对方也感兴趣，将开启 Chat Intro。`);
+        renderMatches();
+      }
+      if (action.dataset.action === "pass") {
+        item.status = "passed";
+        showToast(`已跳过 ${item.name}。推荐队列会学习你的偏好。`);
+        renderMatches();
+      }
+      if (action.dataset.action === "super") {
+        item.status = "super";
+        showToast(`已发送 Super Match 给 ${item.name}。`);
+        routeTo("chat");
+      }
+    });
+
+    document.querySelector("#signup-btn").addEventListener("click", () => {
+      state.userName = document.querySelector("#signup-name").value || "Founder";
+      document.querySelector("#profile-name").value = state.userName;
+      showToast("账号已创建，继续完善 Founder Profile。");
+      routeTo("onboarding");
+    });
+
+    document.querySelector("#login-btn").addEventListener("click", () => {
+      showToast("登录成功，欢迎回来。");
+      routeTo("matches");
+    });
+
+    document.querySelector("#save-profile").addEventListener("click", () => {
+      state.userName = document.querySelector("#profile-name").value || state.userName;
+      showToast("Founder Profile 已保存，AI 正在刷新推荐。");
+      routeTo("matches");
+    });
+
+    document.querySelector("#reset-matches").addEventListener("click", () => {
+      state.candidates = JSON.parse(JSON.stringify(candidates));
+      showToast("演示数据已重置。");
+      renderMatches();
+    });
+
+    document.querySelector("#empty-reset").addEventListener("click", () => {
+      state.candidates = JSON.parse(JSON.stringify(candidates));
+      renderMatches();
+    });
+
+    document.querySelector("#generate-report").addEventListener("click", () => {
+      showToast("AI Compatibility Report 已生成。");
+      renderReport(true);
+    });
+
+    document.querySelector("#run-simulation").addEventListener("click", () => {
+      showToast("Simulation 已完成。");
+      renderSimulation();
+    });
+
+    document.querySelector("#scenario").addEventListener("change", renderSimulation);
+
+    document.querySelector("#copy-opener").addEventListener("click", async () => {
+      const text = document.querySelector("#opener").textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("破冰消息已复制。");
+      } catch {
+        showToast("浏览器限制复制权限，但消息已在页面中可选中。");
+      }
+    });
+
+    document.querySelectorAll(".checkout").forEach(btn => {
+      btn.addEventListener("click", () => {
+        showToast(`${btn.dataset.plan} checkout demo：正式版将跳转到 Stripe。`);
+      });
+    });
+
+    const initialRoute = window.location.hash.replace("#", "");
+    routeTo(routes.includes(initialRoute) ? initialRoute : "landing");
+  </script>
+</body>
+</html>
